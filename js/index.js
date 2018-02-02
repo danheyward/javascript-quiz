@@ -18,12 +18,20 @@ var aSelect = function() {
 };
 
 
+var start = function() {
+  $('.startbox').on('click', function() {
+    $('.startbox').toggleClass('hide');
+    $('.container').toggleClass('hide');
+  });
+};
+
+
 
 var displayQuestion = function() {
   qTitle.html(qArray[count].question);
   qAnswers = [];
-  aCorrect = qArray[count].correct_answer; //String
-  qAnswers = qArray[count].incorrect_answers; //Array
+  aCorrect = qArray[count].correct_answer;
+  qAnswers = qArray[count].incorrect_answers;
   qAnswers.splice(random, 0, aCorrect);
   for (i = 0; i < qAnswers.length; i++) {
     qOptions.append("<p class='left-align' id='q" + i + "'><input class='with-gap' type='radio' name='answer' id='" + i
@@ -45,19 +53,20 @@ var addScore = function() {
   var correct = qArray[count].correct_answer;
   var incorrect = qArray[count].incorrect_answers;
 
-  for (i=0; i < qArray.length; i++) {
+  for (i=0; i < qAnswers.length; i++) {
     if ($('#' + i).val() === correct && $('#' + i).is(':checked')) {
-      score++
+      score++;
     }
   };
   count++
-  checkForEnd();
+
 };
 
 
 var nextQuestion = function() {
   if ($('.selDone').length > 0) {
     addScore();
+    checkForEnd();
     random = Math.floor(Math.random() * 5);
     $('input').remove();
     $('.answers').remove();
@@ -75,6 +84,6 @@ var getQuestions = function() {
 
 $(document).ready(function() {
   getQuestions();
-
+  start();
 
 });

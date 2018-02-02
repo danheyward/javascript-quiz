@@ -39,8 +39,12 @@ label {
   display: none;
 }
 
-.scorebox {
+.scorebox, .startbox {
   margin: 200px auto;
-  width: 100%;
+  width: 50%;
   font-size: 50px;
+}
+
+.startbox {
+  cursor: pointer;
 }
