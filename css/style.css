@@ -6,17 +6,41 @@ body {
 }
 
 
-h1 {
-  color: blue;
+h5 {
+  color: #FFF;
+  size: 40px;
 }
 
 input {
-  display: block;
+
 }
 
-.nextbox {
-  width:30px;
-  margin: 20px auto;
-  padding: 5px;
-  border: 1px solid black;
+.container {
+  margin-top: 100px;
+}
+
+.formcontainer {
+  display: inline-block;
+}
+
+label {
+  color: #FFF;
+}
+
+.selDone + label {
+  color: #888;
+}
+
+.selDone:checked + label {
+  color: #FFF;
+}
+
+.hide {
+  display: none;
+}
+
+.scorebox {
+  margin: 200px auto;
+  width: 100%;
+  font-size: 50px;
 }

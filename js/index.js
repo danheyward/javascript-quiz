@@ -1,79 +1,80 @@
 /*
-* Your names
+* Tim Hass, Zakir Butte, Daniel Heyward
 */
 
 var score = 0;
-var questionCount = 0;
-var questionArray = [];
-
-
-// get results.question results.answers results.incorrect_answer results.incorrect_answer[]
-// build
-//add one to count
-// record if correct or not for score
-// get next question
-var displayQuestion = function() {
-  $('#questionbox').text(questionArray[questionCount].question);
-  var answerValue = [];
-  var correct = questionArray[questionCount].correct_answer;
-  var incorrect = questionArray[questionCount].incorrect_answers;
-  answerValue.push(correct);
-  answerValue = answerValue.concat(incorrect);
-  for (i = 0; i < answerValue.length; i++) {
-  $('.question').append("<input type='radio' name='answer' id='option'" + i + "' value='" + answerValue[i] + "' >" + "<p class='answers'>" + answerValue[i] + "</p>");
-  };
-  questionCount++;
+var count = 0;
+var qArray = [];
+var qAnswers = [];
+var qTitle = $('#questionbox');
+var qOptions = $('#questionform');
+var aCorrect = [];
+var aIncorrect = [];
+var random = Math.floor(Math.random() * 5);
+var aSelect = function() {
+  $('input[type=radio]').change(function(){
+    $('input[type=radio]').addClass('selDone');
+  });
 };
+
+
+
+var displayQuestion = function() {
+  qTitle.html(qArray[count].question);
+  qAnswers = [];
+  aCorrect = qArray[count].correct_answer; //String
+  qAnswers = qArray[count].incorrect_answers; //Array
+  qAnswers.splice(random, 0, aCorrect);
+  for (i = 0; i < qAnswers.length; i++) {
+    qOptions.append("<p class='left-align' id='q" + i + "'><input class='with-gap' type='radio' name='answer' id='" + i
+    + "' value='" + qAnswers[i] + "' />" + "<label for='" + i + "' class='answers'>"
+    + qAnswers[i] + "</label></p>");
+  };
+  aSelect();
+};
+
+var checkForEnd = function() {
+  if (count >= qArray.length) {
+    $('.container').toggleClass('hide');
+    $('.scorebox').toggleClass('hide').html('<span class="white-text">Score: ' + score + "</span>");
+  }
+};
+
 
 var addScore = function() {
-  var correct = questionArray[questionCount].correct_answer;
-  var incorrect = questionArray[questionCount].incorrect_answers;
+  var correct = qArray[count].correct_answer;
+  var incorrect = qArray[count].incorrect_answers;
 
-  if ($('#option1').val() === correct && $('#option1').attr('checked') === true) {
-    score++;
-  }
-  console.log($('#option1'));
-
-
-
+  for (i=0; i < qArray.length; i++) {
+    if ($('#' + i).val() === correct && $('#' + i).is(':checked')) {
+      score++
+    }
   };
-
-
-
-
-
-var nextQuestion = function () {
-  addScore();
-  $('input').remove();
-  $('.answers').remove();
-  displayQuestion();
-
-
+  count++
+  checkForEnd();
 };
 
 
-
-var getQuestions = function () {
-
-  $.get('https://opentdb.com/api.php?amount=10&category=9&difficulty=medium&type=multiple').done(function(data) {
-    questionArray = data.results;
-    console.log(questionArray);
+var nextQuestion = function() {
+  if ($('.selDone').length > 0) {
+    addScore();
+    random = Math.floor(Math.random() * 5);
+    $('input').remove();
+    $('.answers').remove();
     displayQuestion();
-    $('.nextbox').on('click', nextQuestion);
+  };
+};
 
+var getQuestions = function() {
+  $.get('https://opentdb.com/api.php?amount=10&category=9&difficulty=medium&type=multiple').done(function(data) {
+    qArray = data.results;
+    displayQuestion();
+    $('.btn').on('click', nextQuestion);
 });
 };
 
+$(document).ready(function() {
+  getQuestions();
 
 
-
-
-
-
-
-  $(document).ready(function() {
-      getQuestions();
-
-
-      // displayQuestion(questionObject);
-  });
+});
